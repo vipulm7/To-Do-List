@@ -22,14 +22,10 @@ public class adapterLeft extends RecyclerView.Adapter<adapterLeft.viewHolder> {
     ArrayList<String> tasksLeft,tasksDone;
     public static final String TAG="Vipul";
     MainActivity m;
-    ClickListener clickListener;
-    CheckListener checkListener;
 
-    public adapterLeft(ArrayList<String> tasksLeft, ArrayList<String> tasksDone, MainActivity m, ClickListener clickListener, CheckListener checkListener) {
+    public adapterLeft(ArrayList<String> tasksLeft, ArrayList<String> tasksDone, MainActivity m) {
         this.tasksLeft = tasksLeft;
         this.tasksDone = tasksDone;
-        this.clickListener=clickListener;
-        this.checkListener=checkListener;
         this.m=m;
     }
 
@@ -69,53 +65,53 @@ public class adapterLeft extends RecyclerView.Adapter<adapterLeft.viewHolder> {
             m.toast.show();
         });
 
-//        holder.edit.setOnClickListener(v -> {
-//            EditText edit1=new EditText(m);
-//            edit1.setHint(tasksLeft.get(position));
-//            AlertDialog.Builder alert=new AlertDialog.Builder(m);
+        holder.edit.setOnClickListener(v -> {
+            EditText edit1=new EditText(m);
+            edit1.setHint(tasksLeft.get(position));
+            AlertDialog.Builder alert=new AlertDialog.Builder(m);
+
+//            edit1.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 //
-////            edit1.addTextChangedListener(new TextWatcher() {
-////                @Override
-////                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-////
-////                }
-////
-////                @Override
-////                public void onTextChanged(CharSequence s, int start, int before, int count) {
-////                    if(s.toString().trim().length()==0)
-////                        alert.
-////                }
-////
-////                @Override
-////                public void afterTextChanged(Editable s) {
-////
-////                }
-////            });
+//                }
 //
-//            alert.setTitle("Rename")
-//                    .setNegativeButton("Cancel", (dialog, which) -> {})
-//                    .setView(edit1)
-//                    .setPositiveButton("Done", (dialog, which) -> {
-//                        String a=edit1.getText().toString();
-//                        if(a.trim().length()!=0) {
-//                            tasksLeft.set(position, a);
-//                            notifyItemChanged(position);
-//                            if(m.toast!=null)
-//                                m.toast.cancel();
-//                            m.toast=Toast.makeText(m,"Renamed!!!",Toast.LENGTH_SHORT);
-//                            m.toast.show();
-//                        }
-//                        else{
-//                            if(m.toast!=null)
-//                                m.toast.cancel();
-//                            m.toast=Toast.makeText(m,"Same as before!!!",Toast.LENGTH_SHORT);
-//                            m.toast.show();
-//                        }
-//                    })
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    if(s.toString().trim().length()==0)
+//                        alert.
+//                }
 //
-//                    .show();
-//            alert.create();
-//        });
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//
+//                }
+//            });
+
+            alert.setTitle("Rename")
+                    .setNegativeButton("Cancel", (dialog, which) -> {})
+                    .setView(edit1)
+                    .setPositiveButton("Done", (dialog, which) -> {
+                        String a=edit1.getText().toString();
+                        if(a.trim().length()!=0) {
+                            tasksLeft.set(position, a);
+                            notifyItemChanged(position);
+                            if(m.toast!=null)
+                                m.toast.cancel();
+                            m.toast=Toast.makeText(m,"Renamed!!!",Toast.LENGTH_SHORT);
+                            m.toast.show();
+                        }
+                        else{
+                            if(m.toast!=null)
+                                m.toast.cancel();
+                            m.toast=Toast.makeText(m,"Same as before!!!",Toast.LENGTH_SHORT);
+                            m.toast.show();
+                        }
+                    })
+
+                    .show();
+            alert.create();
+        });
     }
 
     @Override
@@ -134,27 +130,7 @@ public class adapterLeft extends RecyclerView.Adapter<adapterLeft.viewHolder> {
             checkBox=itemView.findViewById(R.id.checkBox);
             task=itemView.findViewById(R.id.taskNameId);
             edit=itemView.findViewById(R.id.imageButtonEditing);
-
-//            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                int position=getAdapterPosition();
-//                if(checkListener!=null && position!=RecyclerView.NO_POSITION)
-//                    checkListener.onCheckChanged(position, isChecked);
-//
-//            });
-            edit.setOnClickListener(v -> {
-                int position=getAdapterPosition();
-                if(clickListener!=null && position!=RecyclerView.NO_POSITION)
-                    clickListener.onEditClicked(position);
-            });
         }
 
-    }
-
-    public interface ClickListener{
-        void onEditClicked(int position);
-    }
-
-    public interface CheckListener{
-        void onCheckChanged(int position, boolean isChecked);
     }
 }

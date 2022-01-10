@@ -53,12 +53,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewDone.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewLeft.setNestedScrollingEnabled(false);
         recyclerViewDone.setNestedScrollingEnabled(false);
-        adpL=new adapterLeft(tasksLeft, tasksDone, this,  new adapterLeft.ClickListener() {
-            @Override
-            public void onEditClicked(int position) {
-                EditText edit1=new EditText(MainActivity.this);
-                edit1.setHint(tasksLeft.get(position));
-                AlertDialog.Builder alert=new AlertDialog.Builder(MainActivity.this);
+//        adpL=new adapterLeft(tasksLeft, tasksDone, this,  new adapterLeft.ClickListener() {
+//            @Override
+//            public void onEditClicked(int position) {
+//                EditText edit1=new EditText(MainActivity.this);
+//                edit1.setHint(tasksLeft.get(position));
+//                AlertDialog.Builder alert=new AlertDialog.Builder(MainActivity.this);
 
 //            edit1.addTextChangedListener(new TextWatcher() {
 //                @Override
@@ -78,145 +78,148 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //            });
 
-                alert.setTitle("Rename")
-                        .setNegativeButton("Cancel", (dialog, which) -> {})
-                        .setView(edit1)
-                        .setPositiveButton("Done", (dialog, which) -> {
-                            String a=edit1.getText().toString();
-                            if(a.trim().length()!=0) {
-                                tasksLeft.set(position, a);
-                                recyclerViewLeft.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        adpL.notifyItemChanged(position);
-                                    }
-                                });
+//                alert.setTitle("Rename")
+//                        .setNegativeButton("Cancel", (dialog, which) -> {})
+//                        .setView(edit1)
+//                        .setPositiveButton("Done", (dialog, which) -> {
+//                            String a=edit1.getText().toString();
+//                            if(a.trim().length()!=0) {
+//                                tasksLeft.set(position, a);
+//                                recyclerViewLeft.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        adpL.notifyItemChanged(position);
+//                                    }
+//                                });
+//
+//                                if(toast!=null)
+//                                    toast.cancel();
+//                                toast=Toast.makeText(getApplicationContext(),"Renamed!!!",Toast.LENGTH_SHORT);
+//                                toast.show();
+//                            }
+//                            else{
+//                                if(toast!=null)
+//                                    toast.cancel();
+//                                toast=Toast.makeText(MainActivity.this,"Same as before!!!",Toast.LENGTH_SHORT);
+//                                toast.show();
+//                            }
+//                        })
+//
+//                        .show();
+//                alert.create();
+//            }
+//        },
+//        new adapterLeft.CheckListener() {
+//            @Override
+//            public void onCheckChanged(int position, boolean isChecked) {
+//                Log.d("Vipul", "adapter left "+isChecked);
+//                String t=tasksLeft.get(position);
+//                Log.d("Vipul", "adapter left "+position);
+//                tasksDone.add(0,t);
+////                adpD.notifyItemInserted(0);
+////                recyclerViewDone.post(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        adpD.notifyItemInserted(0);
+////                    }
+////                });
+//
+//                runOnUiThread(() -> adpD.notifyItemInserted(0));
+//                Log.d("Apos4",""+0);
+//                tasksLeft.remove(position);
+////            m.changed();
+////                adpL.notifyItemRemoved(position);
+////                recyclerViewLeft.post(() -> adpL.notifyItemRemoved(position));
+//                runOnUiThread(() -> adpL.notifyItemRemoved(position));
+//                Log.d("Rpos2",""+position);
+//
+//                changed();
+//
+//                Log.d(TAG,"Toast started");
+//                if(toast!=null)
+//                    toast.cancel();
+//                toast=Toast.makeText(getApplicationContext(),"Hurray!!!",Toast.LENGTH_LONG);
+//                toast.show();
+//            }
+//        });
 
-                                if(toast!=null)
-                                    toast.cancel();
-                                toast=Toast.makeText(getApplicationContext(),"Renamed!!!",Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                            else{
-                                if(toast!=null)
-                                    toast.cancel();
-                                toast=Toast.makeText(MainActivity.this,"Same as before!!!",Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                        })
+        adpL=new adapterLeft(tasksLeft, tasksDone, this);
+        adpD=new adapterDone(tasksLeft, tasksDone, this);
 
-                        .show();
-                alert.create();
-            }
-        },
-        new adapterLeft.CheckListener() {
-            @Override
-            public void onCheckChanged(int position, boolean isChecked) {
-                Log.d("Vipul", "adapter left "+isChecked);
-                String t=tasksLeft.get(position);
-                Log.d("Vipul", "adapter left "+position);
-                tasksDone.add(0,t);
-//                adpD.notifyItemInserted(0);
+//        adpD=new adapterDone(tasksLeft, tasksDone, new adapterDone.ClickListener() {
+//            @Override
+//            public void onDeleteCLick(int position) {
+//                String s = tasksDone.get(position);
+//
+//                tasksDone.remove(position);
 //                recyclerViewDone.post(new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        adpD.notifyItemInserted(0);
+//                        adpD.notifyItemRemoved(position);
 //                    }
 //                });
-
-                runOnUiThread(() -> adpD.notifyItemInserted(0));
-                Log.d("Apos4",""+0);
-                tasksLeft.remove(position);
-//            m.changed();
-//                adpL.notifyItemRemoved(position);
-//                recyclerViewLeft.post(() -> adpL.notifyItemRemoved(position));
-                runOnUiThread(() -> adpL.notifyItemRemoved(position));
-                Log.d("Rpos2",""+position);
-
-                changed();
-
-                Log.d(TAG,"Toast started");
-                if(toast!=null)
-                    toast.cancel();
-                toast=Toast.makeText(getApplicationContext(),"Hurray!!!",Toast.LENGTH_LONG);
-                toast.show();
-            }
-        });
-
-        adpD=new adapterDone(tasksLeft, tasksDone, new adapterDone.ClickListener() {
-            @Override
-            public void onDeleteCLick(int position) {
-                String s = tasksDone.get(position);
-
-                tasksDone.remove(position);
-                recyclerViewDone.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        adpD.notifyItemRemoved(position);
-                    }
-                });
-                Log.d("Apos1", "" + position);
-                changed();
-                Log.d("check", "" + snackbar);
-                snackbar = Snackbar.make(forSnackBar, "Deleted " + s + "!", Snackbar.LENGTH_LONG);
-                snackbar.setAction("Undo", v1 -> {
-
-                    tasksDone.add(st.head.d.pos, st.head.d.task);
-                    recyclerViewDone.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            adpD.notifyItemInserted(st.head.d.pos);
-                        }
-                    });
-                    Log.d("Apos2", "" + st.head.d.pos);
-                    changed();
-                    st.remove();
-                    recursion(st);
-                });
-                snackbar.addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        if (event == 0 || event == 2)
-                            st.empty();
-                    }
-                });
-
-                st.add(new Stack.data(s, position, snackbar));
-                snackbar.show();
-            }
-        },
-                new adapterDone.CheckListener() {
-                    @Override
-                    public void onCheckedChange(int position, boolean isChecked) {
-                        Log.d(TAG, "adapter done "+isChecked);
-                        String t=tasksDone.get(position);
-                        Log.d(TAG, "adapter done "+position);
-                        tasksLeft.add(0,t);
-                        recyclerViewLeft.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                adpL.notifyItemInserted(0);
-                            }
-                        });
-                        Log.d("Apos3",""+0);
-                        tasksDone.remove(position);
-//            m.changed();
-                        recyclerViewDone.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                adpD.notifyItemRemoved(position);
-                            }
-                        });
-                        Log.d("Rpos1",""+position);
-
-                        changed();
-
-                        if(toast!=null)
-                            toast.cancel();
-                        toast=Toast.makeText(MainActivity.this,"Added!!!",Toast.LENGTH_LONG);
-                        toast.show();
-                    }
-                });
+//                Log.d("Apos1", "" + position);
+//                changed();
+//                Log.d("check", "" + snackbar);
+//                snackbar = Snackbar.make(forSnackBar, "Deleted " + s + "!", Snackbar.LENGTH_LONG);
+//                snackbar.setAction("Undo", v1 -> {
+//
+//                    tasksDone.add(st.head.d.pos, st.head.d.task);
+//                    recyclerViewDone.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            adpD.notifyItemInserted(st.head.d.pos);
+//                        }
+//                    });
+//                    Log.d("Apos2", "" + st.head.d.pos);
+//                    changed();
+//                    st.remove();
+//                    recursion(st);
+//                });
+//                snackbar.addCallback(new Snackbar.Callback() {
+//                    @Override
+//                    public void onDismissed(Snackbar snackbar, int event) {
+//                        if (event == 0 || event == 2)
+//                            st.empty();
+//                    }
+//                });
+//
+//                st.add(new Stack.data(s, position, snackbar));
+//                snackbar.show();
+//            }
+//        },
+//                new adapterDone.CheckListener() {
+//                    @Override
+//                    public void onCheckedChange(int position, boolean isChecked) {
+//                        Log.d(TAG, "adapter done "+isChecked);
+//                        String t=tasksDone.get(position);
+//                        Log.d(TAG, "adapter done "+position);
+//                        tasksLeft.add(0,t);
+//                        recyclerViewLeft.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                adpL.notifyItemInserted(0);
+//                            }
+//                        });
+//                        Log.d("Apos3",""+0);
+//                        tasksDone.remove(position);
+////            m.changed();
+//                        recyclerViewDone.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                adpD.notifyItemRemoved(position);
+//                            }
+//                        });
+//                        Log.d("Rpos1",""+position);
+//
+//                        changed();
+//
+//                        if(toast!=null)
+//                            toast.cancel();
+//                        toast=Toast.makeText(MainActivity.this,"Added!!!",Toast.LENGTH_LONG);
+//                        toast.show();
+//                    }
+//                });
         recyclerViewDone.setAdapter(adpD);
         recyclerViewLeft.setAdapter(adpL);
 
