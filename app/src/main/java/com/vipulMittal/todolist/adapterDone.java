@@ -19,104 +19,136 @@ import java.util.ArrayList;
 
 public class adapterDone extends RecyclerView.Adapter<adapterDone.viewHolder> {
 
-    ArrayList<String> tasksLeft,tasksDone;
-    MainActivity m;
+	ArrayList<String> tasksLeft,tasksDone;
+	public static final String TAG="Vipul";
+	ClickListener clickListener;
+	CheckListener checkListener;
 
-    public adapterDone(ArrayList<String> tasksLeft, ArrayList<String> tasksDone,  MainActivity m) {
-        this.tasksLeft = tasksLeft;
-        this.tasksDone = tasksDone;
-        this.m=m;
-    }
+	public adapterDone(ArrayList<String> tasksLeft, ArrayList<String> tasksDone, ClickListener clickListener, CheckListener checkListener) {
+		this.tasksLeft = tasksLeft;
+		this.tasksDone = tasksDone;
+		this.clickListener=clickListener;
+		this.checkListener=checkListener;
+	}
 
-    @NonNull
-    @Override
-    public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_per_item_done,parent,false);
-        viewHolder viewholder=new viewHolder(view);
-        return viewholder;
-    }
+	@NonNull
+	@Override
+	public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_per_item_done,parent,false);
+		viewHolder viewholder=new viewHolder(view);
+		return viewholder;
+	}
 
-    @Override
-    public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        holder.task.setText(tasksDone.get(position));
-        holder.checkBox.setChecked(true);
-        Log.d("Vipul", "onBindViewHolder: ");
-
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Log.d("Vipul done", ""+isChecked);
-            String t=tasksDone.get(position);
-            tasksLeft.add(0,t);
-            m.adpL.notifyItemInserted(0);
-            Log.d("Apos3",""+0);
-            tasksDone.remove(position);
-            Log.d("vipul", "Unreachable ");
+	@Override
+	public void onBindViewHolder(@NonNull viewHolder holder, int position) {
+		holder.task.setText(tasksDone.get(position));
+		Log.d(TAG, "Adapter done :: onBind "+position+" "+tasksDone.get(position));
+		holder.checkBox.setOnCheckedChangeListener(null);
+		holder.checkBox.setChecked(true);
+		holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+			if(checkListener!=null)
+				checkListener.onCheckedChange(holder);
+		});
+		Log.d(TAG, "onBind  Check Applied");
+		{
+//        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            Log.d("Vipul done", ""+isChecked);
+//            String t=tasksDone.get(position);
+//            tasksLeft.add(0,t);
+//            m.adpL.notifyItemInserted(0);
+//            Log.d("Apos3",""+0);
+//            tasksDone.remove(position);
+//            Log.d("vipul", "Unreachable ");
+////            m.changed();
+//            notifyItemRemoved(position);
+//            Log.d("Rpos1",""+position);
+//
 //            m.changed();
-            notifyItemRemoved(position);
-            Log.d("Rpos1",""+position);
+//
+//            if(m.toast!=null)
+//                m.toast.cancel();
+//            m.toast=Toast.makeText(m,"Added!!!",Toast.LENGTH_LONG);
+//            m.toast.show();
+//        });
 
-            m.changed();
+//        holder.del.setOnClickListener(v -> {
+//            String s=tasksDone.get(position);
+//
+//            tasksDone.remove(position);
+//            notifyItemRemoved(position);
+//            Log.d("Apos1",""+position);
+//            m.changed();
+//            Log.d("check", ""+m.snackbar);
+//            m.snackbar=Snackbar.make(m.forSnackBar,"Deleted "+s+"!",Snackbar.LENGTH_LONG);
+//            m.snackbar.setAction("Undo", v1 -> {
+//
+//                tasksDone.add(m.st.head.d.pos, m.st.head.d.task);
+//                notifyItemInserted(m.st.head.d.pos);
+//                Log.d("Apos2",""+m.st.head.d.pos);
+//                m.changed();
+//                m.st.remove();
+//                recursion(m.st);
+//            });
+//            m.snackbar.addCallback(new Snackbar.Callback(){
+//                @Override
+//                public void onDismissed(Snackbar snackbar, int event)
+//                {
+//                    if(event==0 || event==2)
+//                        m.st.empty();
+//                }
+//            });
+//
+//            m.st.add(new Stack.data(s,position,m.snackbar));
+//            m.snackbar.show();
+//        });
+		}
+	}
 
-            if(m.toast!=null)
-                m.toast.cancel();
-            m.toast=Toast.makeText(m,"Added!!!",Toast.LENGTH_LONG);
-            m.toast.show();
-        });
+	{
+//    private void recursion(Stack s) {
+//        if(s.head==null)
+//            return;
+//        m.snackbar=s.head.d.snackbar;
+//        m.snackbar.show();
+//    }
+	}
 
-        holder.del.setOnClickListener(v -> {
-            String s=tasksDone.get(position);
+	@Override
+	public int getItemCount() {
+		return tasksDone.size();
+	}
 
-            tasksDone.remove(position);
-            notifyItemRemoved(position);
-            Log.d("Apos1",""+position);
-            m.changed();
-            Log.d("check", ""+m.snackbar);
-            m.snackbar=Snackbar.make(m.forSnackBar,"Deleted "+s+"!",Snackbar.LENGTH_LONG);
-            m.snackbar.setAction("Undo", v1 -> {
+	public class viewHolder extends RecyclerView.ViewHolder
+	{
+		CheckBox checkBox;
+		TextView task;
+		ImageButton del;
 
-                tasksDone.add(m.st.head.d.pos, m.st.head.d.task);
-                notifyItemInserted(m.st.head.d.pos);
-                Log.d("Apos2",""+m.st.head.d.pos);
-                m.changed();
-                m.st.remove();
-                recursion(m.st);
-            });
-            m.snackbar.addCallback(new Snackbar.Callback(){
-                @Override
-                public void onDismissed(Snackbar snackbar, int event)
-                {
-                    if(event==0 || event==2)
-                        m.st.empty();
-                }
-            });
+		public viewHolder(@NonNull View itemView) {
+			super(itemView);
+			checkBox=itemView.findViewById(R.id.checkBox);
+			task=itemView.findViewById(R.id.taskNameId);
+			del=itemView.findViewById(R.id.deleteButton);
 
-            m.st.add(new Stack.data(s,position,m.snackbar));
-            m.snackbar.show();
-        });
-    }
+			del.setOnClickListener(v -> {
+				int position=getAdapterPosition();
+				if(clickListener!=null && position!=-1)
+					clickListener.onDeleteCLick(this);
+			});
 
-    private void recursion(Stack s) {
-        if(s.head==null)
-            return;
-        m.snackbar=s.head.d.snackbar;
-        m.snackbar.show();
-    }
+			checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+				int position=getAdapterPosition();
+				if(checkListener!=null && position!=-1)
+					checkListener.onCheckedChange(this);
+			});
+		}
+	}
 
-    @Override
-    public int getItemCount() {
-        return tasksDone.size();
-    }
+	public interface ClickListener {
+		void onDeleteCLick(RecyclerView.ViewHolder viewHolder);
+	}
 
-    public class viewHolder extends RecyclerView.ViewHolder
-    {
-        CheckBox checkBox;
-        TextView task;
-        ImageButton del;
-
-        public viewHolder(@NonNull View itemView) {
-            super(itemView);
-            checkBox=itemView.findViewById(R.id.checkBox);
-            task=itemView.findViewById(R.id.taskNameId);
-            del=itemView.findViewById(R.id.deleteButton);
-        }
-    }
+	public interface CheckListener {
+		void onCheckedChange(RecyclerView.ViewHolder viewHolder);
+	}
 }
