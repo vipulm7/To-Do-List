@@ -1,11 +1,5 @@
 package com.vipulMittal.todolist;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,12 +8,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -56,140 +54,128 @@ public class MainActivity extends AppCompatActivity {
 		recyclerViewDone.setLayoutManager(new LinearLayoutManager(this));
 		recyclerViewLeft.setNestedScrollingEnabled(false);
 		recyclerViewDone.setNestedScrollingEnabled(false);
-		adpL=new adapterLeft(tasksLeft, tasksDone, new adapterLeft.ClickListener() {
-			@Override
-			public void onEditClicked(RecyclerView.ViewHolder viewHolder) {
-				int position=viewHolder.getAdapterPosition();
-				EditText edit1=new EditText(MainActivity.this);
-				edit1.requestFocus();
-
-				edit1.setHint(tasksLeft.get(position));
-				AlertDialog.Builder alert=new AlertDialog.Builder(MainActivity.this);
 
 
-				alert.setTitle("Rename")
-						  .setNegativeButton("Cancel", (dialog, which) -> {
+		adpL=new adapterLeft(tasksLeft, tasksDone, viewHolder -> {
+			int position=viewHolder.getAdapterPosition();
+			EditText edit1=new EditText(MainActivity.this);
+			edit1.requestFocus();
+
+			edit1.setHint(tasksLeft.get(position));
+			AlertDialog.Builder alert=new AlertDialog.Builder(MainActivity.this);
+
+
+			alert.setTitle("Rename")
+					  .setNegativeButton("Cancel", (dialog, which) -> {
+						  if(toast!=null)
+							  toast.cancel();
+						  toast=Toast.makeText(MainActivity.this,"Cancelled!!!",Toast.LENGTH_SHORT);
+						  toast.show();
+					  })
+					  .setView(edit1)
+					  .setPositiveButton("Done", (dialog, which) -> {
+						  String a=edit1.getText().toString();
+						  if(a.trim().length()!=0 && !a.equals(tasksLeft.get(position))) {
+							  tasksLeft.set(position, a);
+							  adpL.notifyItemChanged(position);
+
 							  if(toast!=null)
 								  toast.cancel();
-							  toast=Toast.makeText(MainActivity.this,"Cancelled!!!",Toast.LENGTH_SHORT);
-							  toast.show();
-						  })
-						  .setView(edit1)
-						  .setPositiveButton("Done", (dialog, which) -> {
-							  String a=edit1.getText().toString();
-							  if(a.trim().length()!=0 && !a.equals(tasksLeft.get(position))) {
-								  tasksLeft.set(position, a);
-								  adpL.notifyItemChanged(position);
+							  toast=Toast.makeText(MainActivity.this,"Renamed!!!",Toast.LENGTH_SHORT);
+						  }
+						  else {
+							  if(toast!=null)
+								  toast.cancel();
+							  toast=Toast.makeText(MainActivity.this,"Same as before!!!",Toast.LENGTH_SHORT);
+						  }
+						  toast.show();
+						  forSnackBar.setFocusable(true);
+						  forSnackBar.setFocusableInTouchMode(true);
+					  })
 
-								  if(toast!=null)
-									  toast.cancel();
-								  toast=Toast.makeText(MainActivity.this,"Renamed!!!",Toast.LENGTH_SHORT);
-								  toast.show();
-								  forSnackBar.setFocusable(true);
-								  forSnackBar.setFocusableInTouchMode(true);
-							  }
-							  else {
-								  if(toast!=null)
-									  toast.cancel();
-								  toast=Toast.makeText(MainActivity.this,"Same as before!!!",Toast.LENGTH_SHORT);
-								  toast.show();
-								  forSnackBar.setFocusable(true);
-								  forSnackBar.setFocusableInTouchMode(true);
-							  }
-						  })
-
-						  .show();
-				alert.create();
-			}
+					  .show();
+			alert.create();
 		},
-				  new adapterLeft.CheckListener() {
-					  @Override
-					  public void onCheckChanged (RecyclerView.ViewHolder viewHolder) {
+				viewHolder -> {
 
 //						  Log.d("Vipul", "adapter left "+isChecked);
-						  int position=viewHolder.getAdapterPosition();
-						  String t=tasksLeft.get(position);
-						  Log.d("Vipul", "adapter left "+position);
-						  tasksDone.add(0,t);
-						  adpD.notifyItemInserted(0);
-						  Log.d("Apos4",""+0);
+					int position=viewHolder.getAdapterPosition();
+					String t=tasksLeft.get(position);
+					Log.d("Vipul", "adapter left "+position);
+					tasksDone.add(0,t);
+					adpD.notifyItemInserted(0);
+					Log.d("Apos4",""+0);
 
-						  tasksLeft.remove(position);
-			           adpL.notifyItemRemoved(position);
-			           Log.d("Rpos2",""+position);
+					tasksLeft.remove(position);
+				 adpL.notifyItemRemoved(position);
+				 Log.d("Rpos2",""+position);
 
-						  changed();
-
-						  Log.d(TAG,"Toast started");
-						  if(toast!=null)
-							  toast.cancel();
-						  toast=Toast.makeText(MainActivity.this,"Hurray!!!",Toast.LENGTH_LONG);
-						  toast.show();
-						  Log.d(TAG,"Toast shown");
-					  }
-				  });
-
-		adpD=new adapterDone(tasksLeft, tasksDone, new adapterDone.ClickListener() {
-			@Override
-			public void onDeleteCLick(RecyclerView.ViewHolder viewHolder) {
-				int position=viewHolder.getAdapterPosition();
-				String s = tasksDone.get(position);
-
-				tasksDone.remove(position);
-				adpD.notifyItemRemoved(position);
-				Log.d("Apos1", "" + position);
-				changed();
-				Log.d(TAG, "Adapter done :: Snackbar started " + snackbar);
-				snackbar = Snackbar.make(forSnackBar, "Deleted " + s + "!", Snackbar.LENGTH_LONG);
-				snackbar.setAction("Undo", v1 -> {
-
-					tasksDone.add(st.head.d.pos, st.head.d.task);
-					adpD.notifyItemInserted(st.head.d.pos);
-					Log.d("Apos2", "" + st.head.d.pos);
 					changed();
-					st.remove();
-					recursion(st);
-				});
-				snackbar.addCallback(new Snackbar.Callback() {
-					@Override
-					public void onDismissed(Snackbar snackbar, int event) {
-						if (event == 0 || event == 2)
-							st.empty();
-					}
+
+					Log.d(TAG,"Toast started");
+					if(toast!=null)
+						toast.cancel();
+					toast=Toast.makeText(MainActivity.this,"Hurray!!!",Toast.LENGTH_LONG);
+					toast.show();
+					Log.d(TAG,"Toast shown");
 				});
 
-				st.add(new Stack.data(s, position, snackbar));
-				snackbar.show();
-			}
+		adpD=new adapterDone(tasksLeft, tasksDone, viewHolder -> {
+			int position=viewHolder.getAdapterPosition();
+			String s = tasksDone.get(position);
+
+			tasksDone.remove(position);
+			adpD.notifyItemRemoved(position);
+			Log.d("Apos1", "" + position);
+			changed();
+			Log.d(TAG, "Adapter done :: Snackbar started " + snackbar);
+			snackbar = Snackbar.make(forSnackBar, "Deleted " + s + "!", Snackbar.LENGTH_LONG);
+			snackbar.setAction("Undo", v1 -> {
+
+				tasksDone.add(st.head.d.pos, st.head.d.task);
+				adpD.notifyItemInserted(st.head.d.pos);
+				Log.d("Apos2", "" + st.head.d.pos);
+				changed();
+				st.remove();
+				recursion(st);
+			});
+			snackbar.addCallback(new Snackbar.Callback() {
+				@Override
+				public void onDismissed(Snackbar snackbar, int event) {
+					if (event == 0 || event == 2)
+						st.empty();
+				}
+			});
+
+			st.add(new Stack.data(s, position, snackbar));
+			snackbar.show();
 		},
-				  new adapterDone.CheckListener() {
-					  @Override
-					  public void onCheckedChange(RecyclerView.ViewHolder viewHolder) {
+				viewHolder -> {
 
-					  	   int position=viewHolder.getAdapterPosition();
+					   int position=viewHolder.getAdapterPosition();
 //						  Log.d(TAG, "adapter done "+isChecked);
-						  String t=tasksDone.get(position);
-						  Log.d(TAG, "adapter done "+position);
-						  tasksLeft.add(0,t);
-						  adpL.notifyItemInserted(0);
-						  Log.d("Apos3",""+0);
-						  tasksDone.remove(position);
+					String t=tasksDone.get(position);
+					Log.d(TAG, "adapter done "+position);
+					tasksLeft.add(0,t);
+					adpL.notifyItemInserted(0);
+					Log.d("Apos3",""+0);
+					tasksDone.remove(position);
 //            m.changed();
-						  adpD.notifyItemRemoved(position);
-						  Log.d("Rpos1",""+position);
+					adpD.notifyItemRemoved(position);
+					Log.d("Rpos1",""+position);
 
-						  changed();
+					changed();
 
-						  if(toast!=null)
-							  toast.cancel();
-						  toast=Toast.makeText(MainActivity.this,"Added!!!",Toast.LENGTH_LONG);
-						  toast.show();
-					  }
-				  });
+					if(toast!=null)
+						toast.cancel();
+					toast=Toast.makeText(MainActivity.this,"Added!!!",Toast.LENGTH_LONG);
+					toast.show();
+				});
 		recyclerViewDone.setAdapter(adpD);
 		recyclerViewLeft.setAdapter(adpL);
 
 		bar= getSupportActionBar();
+		assert bar != null;
 		bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#17DABD")));
 
 		add=findViewById(R.id.addbutton);
@@ -218,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 		reset.setOnClickListener(v->{
-			ArrayList<String> c1=new ArrayList<>(),c2=new ArrayList<>();
-			c1.addAll(tasksLeft);
-			c2.addAll(tasksDone);
+			ArrayList<String> c1,c2;
+			c1 = new ArrayList<>(tasksLeft);
+			c2 = new ArrayList<>(tasksDone);
 			int a=tasksLeft.size();
 			int b=tasksDone.size();
 			tasksLeft.clear();
