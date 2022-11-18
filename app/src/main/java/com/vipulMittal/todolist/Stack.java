@@ -45,18 +45,4 @@ public class Stack {
         head =  null;
     }
 
-    public void print()
-    {
-        Log.d("Stack printing::", "\n");
-        Log.d("Stack printing::", "\n");
-        node curr=head;
-        while(curr!=null)
-        {
-            System.out.println(curr.d.task);
-            Log.d("Stack printing::", curr.d.task+"\n");
-            curr=curr.next;
-        }
-        Log.d("Stack printing::", "\n");
-        Log.d("Stack printing::", "\n");
-    }
 }
