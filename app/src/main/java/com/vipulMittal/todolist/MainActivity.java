@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 			edit1.setHint(tasksLeft.get(position));
 			AlertDialog.Builder alert=new AlertDialog.Builder(MainActivity.this);
 
-
 			alert.setTitle("Rename")
 					  .setNegativeButton("Cancel", (dialog, which) -> {
 						  if(toast!=null)
